@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="../styles/app.css">
+    <title>Notepad--</title>
+</head>
+<body>
+    <main>
+        <div class="buttons">
+            <button id="loadFile" type="button" class="menu-button">load file</button>
+            <button id="saveFile" type="button" class="menu-button">save file</button>
+            <button id="deleteFile" type="button" class="menu-button">delete file</button>
+            <button id="closeFile" type="button" class="menu-button">close file</button>
+            <button id="createFile" type="button" class="menu-button">new file</button>
+        </div>
+
+        <div class="file-content" id="fileContent" contenteditable="true"></div>
+    </main>
+
+    <script type="module" src="../scripts/render.js"></script>
+    <script type="module" src="../scripts/events.js"></script>
+</body>
+</html>
