@@ -25,8 +25,7 @@ async function updateWindowTitle(title) {
 function getFileTitle(toggle) {
     const isSaved = toggle ? Text.NONE : Text.NOT_SAVED
 
-    const title = 
-        !currentFile.path ? 
+    const title = !currentFile.path ? 
         isSaved + Text.DEFAULT_TITLE :
         isSaved + `${currentFile.name} - ${Text.DEFAULT_TITLE}`
 
@@ -41,18 +40,18 @@ async function setFileSaving(toggle) {
     await updateWindowTitle(title)
 }
 
-function updateLastFileContent(content = null) {
+function updateLastFileContent(content) {
     lastFileContent = content;
 }
 
-function setCurrentFileData(filePath = null, fileName = null) {
-    currentFile.name = filePath;
-    currentFile.path = fileName;
+function setCurrentFileData(filePath, fileName) {
+    currentFile.name = fileName;
+    currentFile.path = filePath;
 }
 
 async function resetFileState() {
-    setCurrentFileData();
-    updateLastFileContent();
+    setCurrentFileData(null, null);
+    updateLastFileContent(null);
 
     await setFileSaving(true);
 }
@@ -106,10 +105,9 @@ async function createFile(content = Text.NONE) {
     const fileData = await api.createFile(content);
 
     if (fileData) {
-        const filePath = fileData.path;
         const fileName = fileData.name;
         
-        await updateFileContent(filePath, fileName, content);
+        await updateFileContent(fileData.path, fileName, content);
         await updateWindowTitle(`${fileName} - ${Text.DEFAULT_TITLE}`);
     }
 }
@@ -119,11 +117,9 @@ async function loadFile() {
 
     if (fileData) {
         const filePath = fileData.path;
-        const fileName = fileData.name;
-
         const fileContent = await api.readFile(filePath);
         
-        await updateFileContent(filePath, fileName, fileContent);
+        await updateFileContent(filePath, fileData.name, fileContent);
 
         return;
     }
