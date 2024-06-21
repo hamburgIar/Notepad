@@ -1,111 +1,149 @@
-const fileContent = document.getElementById('fileContent')
+const fileContent = document.getElementById("fileContent");
 
 const currentFile = {
     name: null,
-    path: null
+    path: null,
+    isSave: false
+};
+
+const Text = {
+    NONE: "",
+    DEFAULT_TITLE: "Notepad--",
+    NOT_SAVED: "• "
 }
 
-let lastFileContent = null
+let lastFileContent = null;
 
-const defaultTitle = "Notepad--"
-
-function toggleFileContent(file = "") {
-    fileContent.innerText = file
+function toggleFileContent(file) {
+    fileContent.innerHTML = file;
 }
 
-async function updateWindowTitle(title = defaultTitle) {
-    await api.changeTitle(title)
+async function updateWindowTitle(title) {
+    await api.changeTitle(title);
+}
+
+function getFileTitle(toggle) {
+    const isSaved = toggle ? Text.NONE : Text.NOT_SAVED
+
+    const title = 
+        !currentFile.path ? 
+        isSaved + Text.DEFAULT_TITLE :
+        isSaved + `${currentFile.name} - ${Text.DEFAULT_TITLE}`
+
+    return title
+}
+
+async function setFileSaving(toggle) {
+    const title = getFileTitle(toggle)
+
+    currentFile.isSave = toggle
+
+    await updateWindowTitle(title)
 }
 
 function updateLastFileContent(content = null) {
-    lastFileContent = content
+    lastFileContent = content;
 }
 
-function resetFileState() {
-    currentFile.name = null
-    currentFile.path = null
+function setCurrentFileData(filePath = null, fileName = null) {
+    currentFile.name = filePath;
+    currentFile.path = fileName;
+}
 
-    updateLastFileContent()
-  }
+async function resetFileState() {
+    setCurrentFileData();
+    updateLastFileContent();
+
+    await setFileSaving(true);
+}
 
 async function updateFileContent(filePath, fileName, file) {
-    currentFile.path = filePath
-    currentFile.name = fileName
+    setCurrentFileData(filePath, fileName)
+    updateLastFileContent(file);
+    toggleFileContent(file);
 
-    updateLastFileContent(file)
-    toggleFileContent(file)
-
-    await updateWindowTitle(`${fileName} - ${defaultTitle}`)
+    await updateWindowTitle(`${fileName} - ${Text.DEFAULT_TITLE}`);
 }
 
 async function hideFileDetails() {
-    resetFileState()    
-    toggleFileContent()
+    toggleFileContent(Text.NONE);
 
-    await updateWindowTitle(`${defaultTitle}`)
+    await resetFileState();
 }
 
 async function saveFile() {
-    const currentFileContent = fileContent.innerText
+    const currentFileContent = fileContent.innerText;
 
     if (currentFile.name) {
-        const isFileExists = await api.checkFileExists(currentFile.path)
+        const isFileExists = await api.checkFileExists(currentFile.path);
         if (isFileExists) {
-            if (currentFileContent === lastFileContent) return
-            updateLastFileContent(currentFileContent)
-            await api.saveFile(currentFile.path, currentFileContent)
+            if (currentFileContent === lastFileContent) return;
+
+            await api.saveFile(currentFile.path, currentFileContent);
+            await setFileSaving(true)
+
+            updateLastFileContent(currentFileContent);
         }
-    } 
-    else {
+    } else {
         if (currentFileContent) {
-            await createFile(currentFileContent)
+            await createFile(currentFileContent);
         }
     }
 }
 
 async function deleteFile() {
     if (currentFile.path) {
-        const isFileExists = await api.checkFileExists(currentFile.path)
+        const isFileExists = await api.checkFileExists(currentFile.path);
         if (isFileExists) {
-            const isDelete = await api.deleteFile(currentFile.path)
+            await api.deleteFile(currentFile.path);
 
-            if (isDelete) {
-                await hideFileDetails()
-
-                return
-            }
+            await hideFileDetails();
         }
     }
 }
 
-async function createFile(content = "") {
-    const fileData = await api.createFile(content),
-        filePath = fileData[0],
-        fileName = fileData[1] 
-    if (filePath) {
-        updateFileContent(filePath, fileName, content)
-        await updateWindowTitle(`${fileName} - ${defaultTitle}`)
+async function createFile(content = Text.NONE) {
+    const fileData = await api.createFile(content);
+
+    if (fileData) {
+        const filePath = fileData.path;
+        const fileName = fileData.name;
+        
+        await updateFileContent(filePath, fileName, content);
+        await updateWindowTitle(`${fileName} - ${Text.DEFAULT_TITLE}`);
     }
 }
 
 async function loadFile() {
-    const fileData = await api.openDialog()
+    const fileData = await api.openFile();
 
     if (fileData) {
-        const filePath = fileData[0],
-            fileName = fileData[1],
-            file = await api.getFileContent(filePath)
+        const filePath = fileData.path;
+        const fileName = fileData.name;
 
-        await updateFileContent(filePath, fileName, file)
+        const fileContent = await api.readFile(filePath);
+        
+        await updateFileContent(filePath, fileName, fileContent);
 
-        return
+        return;
     }
 }
 
 async function closeFile() {
-    if (currentFile.path) {
-        await hideFileDetails()
-    }
+    await hideFileDetails();
 }
 
-export {saveFile, closeFile, loadFile, deleteFile, createFile}
+export {
+    saveFile, 
+    closeFile, 
+    loadFile, 
+    deleteFile,
+    createFile, 
+    setFileSaving, 
+    toggleFileContent
+};
+
+export { 
+    currentFile,
+    fileContent
+}

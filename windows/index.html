@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <link rel="stylesheet" href="../styles/app.css">
+    <link id="theme" rel="stylesheet" href="../styles/darkTheme.css">
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script> -->
     <title>Notepad--</title>
 </head>
-<body>
+<body class="hljs">
     <main>
-        <div class="buttons">
-            <button id="loadFile" type="button" class="menu-button">load file</button>
-            <button id="saveFile" type="button" class="menu-button">save file</button>
-            <button id="deleteFile" type="button" class="menu-button">delete file</button>
-            <button id="closeFile" type="button" class="menu-button">close file</button>
-            <button id="createFile" type="button" class="menu-button">new file</button>
-        </div>
-
-        <div class="file-content" id="fileContent" contenteditable="true"></div>
+        <pre><code><div class="file-content" id="fileContent" contenteditable="true"></div></code></pre>
     </main>
 
     <script type="module" src="../scripts/render.js"></script>

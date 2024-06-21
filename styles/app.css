@@ -7,28 +7,34 @@ main {
     display: flex;
 }
 
+pre {
+    min-height: 100vh;
+    flex: 10;
+    overflow: hidden;
+}
+
 .file-content {
-    flex: 9;
-    height: calc(100vh - 24px);
-    border: 2px solid black;
+    min-height: 100vh;
     padding: 10px;
+    white-space: pre;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    text-decoration: none;
+    font-family: "helvetica", sans-serif;
+    letter-spacing: 0.07em;
+    font-weight: 500;
+    font-style: normal;
+    box-sizing: border-box;
 }
 
-.buttons {
-    flex: 1;
-    height: 100vh;
+body::-webkit-scrollbar {
+    width: 6px;     
 }
-
-.menu-button {
-    width: 130px;
-    height: 40px;
-    margin-left: 10px;
-    margin-right: 5px;
-    margin-top: 10px;
+body::-webkit-scrollbar-track {
+    background: none;      
 }
-
-.file-text  {
-    display: none;
-    color: black;
-    font-size: 15px;
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(61, 61, 103, 0.688);  
+    border-radius: 20px;    
 }

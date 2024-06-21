@@ -1,34 +1,86 @@
-import {saveFile, closeFile, deleteFile, loadFile, createFile} from './render.js'
+import {
+    saveFile,
+    closeFile,
+    deleteFile,
+    loadFile,
+    createFile,
+    currentFile,
+    setFileSaving,
+    toggleFileContent,
+    fileContent
+} from "./render.js";
 
-const loadFileButton = document.getElementById('loadFile')
-const saveFileButton = document.getElementById('saveFile')
-const deleteFileButton = document.getElementById('deleteFile')
-const closeFileButton = document.getElementById('closeFile')
-const createFileButton = document.getElementById('createFile')
+import {
+    getCursorPosition,
+    setCursorPosition
+} from "./cursor.js"
 
-async function keydownHandler(event) {
-    if (event.ctrlKey) {
+let theme = true;
+
+async function handleKeyCombination(event) {
+    if (event.ctrlKey && event.shiftKey) {
         switch (event.code) {
-            case "KeyS":
-                await saveFile()
-                break
             case "KeyX":
-                await closeFile()
-                break
+                await closeFile();
+                break;
             case "KeyQ":
-                await loadFile()
-                break
+                await loadFile();
+                break;
             case "KeyN":
-                await createFile()
-                break
+                await createFile();
+                break;
+            case "KeyB":
+                if (
+                    currentFile.path &&
+                    confirm("Вы действительно хотите удалить файл?")
+                ) {
+                    await deleteFile();
+                }
+                break;
         }
+    } else if (event.ctrlKey && event.code === "KeyS") {
+        await saveFile();
+    } else if (event.code === "F1") {
+        swithTheme()
     }
 }
 
-loadFileButton.addEventListener('click', loadFile)
-saveFileButton.addEventListener('click', saveFile)
-deleteFileButton.addEventListener('click', deleteFile)
-closeFileButton.addEventListener('click', closeFile)
-createFileButton.addEventListener('click', async () => await createFile())
+function swithTheme() {
+    const linkElement = document.getElementById("theme");
 
-document.addEventListener("keydown", keydownHandler)
+    theme = !theme
+
+    linkElement.href = theme
+        ? "../styles/darkTheme.css"
+        : "../styles/lightTheme.css";
+}
+
+function insertTab() {
+    let selection = window.getSelection();
+    selection.collapseToStart();
+    let range = selection.getRangeAt(0);
+    range.insertNode(document.createTextNode("    "));
+    selection.collapseToEnd();
+}
+
+fileContent.addEventListener("input", async (event) => {
+    if (currentFile.path) {
+        const currentCursorPosition = getCursorPosition();
+        const highlightCode = await api.highlightedCode(fileContent.innerText,currentFile.path);
+
+        toggleFileContent(highlightCode);
+        setCursorPosition(currentCursorPosition);
+    }
+
+    await setFileSaving(false);
+});
+
+fileContent.addEventListener("keydown", async (event) => {
+    if (event.key === "Tab") {
+        event.preventDefault();
+
+        insertTab()
+    }
+});
+
+document.addEventListener("keydown", handleKeyCombination);
