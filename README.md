@@ -1,4 +1,4 @@
-# ❤️ Notepad--
+# ❤️ Notepad
 
 ### ❗Info:
 **There are a lot of flaws in my notepad, such as poor optimization for a large number of lines, and line wrapping does not work as it should. But I'll fix it somehow) Code highlighting has been added, supports more than 10 languages and all their extensions. The interface has been updated, now the control is completely from the keyboard.**
@@ -19,11 +19,9 @@
 \
 ***Python***\
 ![image](https://github.com/hamburgIar/Notepad/assets/92908058/c8969c2e-129c-469b-a7fa-6876e07b3744)
-![image](https://github.com/hamburgIar/Notepad/assets/92908058/37e36b52-c735-4e68-b00b-627cd513b636)
 \
 ***Json***\
 ![image](https://github.com/hamburgIar/Notepad/assets/92908058/8e424ccc-d0eb-4a6a-bed4-c02c6c3a3f4e)
-![image](https://github.com/hamburgIar/Notepad/assets/92908058/7a287bee-29f7-4223-a504-6ff7ebf6369a)
 \
 ***CSS***\
 ![image](https://github.com/hamburgIar/Notepad/assets/92908058/22e16884-4b67-485d-bc34-48bba1ffbeb5)
