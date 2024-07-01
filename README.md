@@ -1,4 +1,4 @@
-# ❤️ Notepad
+# Notepad
 
 ### ❗Info:
 **There are a lot of flaws in my notepad, such as poor optimization for a large number of lines, and line wrapping does not work as it should. But I'll fix it somehow) Code highlighting has been added, supports more than 15 languages and all their extensions. The interface has been updated, now the control is completely from the keyboard.**
